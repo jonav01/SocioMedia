@@ -8,7 +8,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 import * as path from "path";
 import { fileURLToPath } from "url";
-
+import { register } from "./controllers/auth.controller.js";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/user.js";
+import { createDirectory } from "./utils/createDirectory.js";
 // Configurations
 const __filename = fileURLToPath(import.meta.url); // ensures cross-platform absolute path
 const __dirname = path.dirname(__filename);
@@ -17,6 +20,7 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
+
 app.use(helmet()); // setup for security
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common")); // HTTP request logger
@@ -38,10 +42,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Routes
-app.get("/", (req, res) => {
-  res.send({ message: "Hello World" });
-});
-
+app.post("/auth/register", createDirectory, upload.single("picture"), register);
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 // Mongoose setup
 const PORT = process.env.PORT || 5000;
 mongoose
