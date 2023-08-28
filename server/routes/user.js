@@ -10,6 +10,6 @@ const router = express.Router();
 router.get("/:id", getUser);
 router.get("/:id/friends", getUserAllFriends);
 
-router.patch("/:id/:friendId", addRemoveFriend);
+router.patch("/:userId/:friendId", addRemoveFriend);
 
 export default router;
